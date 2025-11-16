@@ -8,7 +8,13 @@
     <div class="col-lg-10 offset-lg-1">
       <div class="card shadow-sm">
         <div class="card-body">
-          <h1 class="text-primary mb-4"><%= title %></h1>
+          <!-- CREATE BUTTON  -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-primary mb-0"><%= title %></h1>
+            <a href="/create" class="btn btn-success">
+              Add New Employee
+            </a>
+          </div>
           
           <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover align-middle">
@@ -19,6 +25,7 @@
                   <th class="text-center">Department</th>
                   <th class="text-center">Contact Info</th>
                   <th class="text-center">Employment Status</th>
+                  <th class="text-center">Actions</th>
                 </tr>
               </thead>
               
@@ -30,6 +37,12 @@
                     <td class="text-center"><%= EmployeeRecords[count].department %></td>
                     <td class="text-center"><%= EmployeeRecords[count].contact_info %></td>
                     <td class="text-center"><%= EmployeeRecords[count].employment_status %></td>
+                    <!-- corrected route -->
+                    <td class="text-center">
+                      <a href="/update/<%= EmployeeRecords[count]._id %>" class="btn btn-warning btn-sm">
+                        Edit
+                      </a>
+                    </td>
                   </tr>
                 <% } %>
               </tbody>
