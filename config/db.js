@@ -1,0 +1,1 @@
+module.exports={"URI":"mongodb+srv://loganbagby-uni:KfGE5bEnMJfvwEAB@cluster0.uifcbot.mongodb.net/Final_Project"}
