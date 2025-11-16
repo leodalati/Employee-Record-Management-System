@@ -8,10 +8,11 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET Create page - Show create form */
+
 router.get('/create', function(req, res, next) {
-  res.render('create', { 
+  res.render('employee_records/create', {
     title: 'Create Employee',
-    employee: {} // Empty object for new employee
+    employee: {}
   });
 });
 
@@ -31,7 +32,7 @@ router.post('/create', async function(req, res, next) {
   }
   catch(err) {
     console.error(err);
-    res.render('create', {
+    res.render('employee_records/create', {
       title: 'Create Employee - Error',
       employee: req.body,
       error: 'Error creating employee: ' + err.message

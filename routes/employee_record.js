@@ -21,7 +21,8 @@ router.get('/', async (req, res, next) => {
 // GET - Show Create Employee Form
 router.get('/create', (req, res) => {
   res.render('employee_records/create', {
-    title: 'Add New Employee'
+    title: 'Add New Employee',
+    employee: {}
   });
 });
 
