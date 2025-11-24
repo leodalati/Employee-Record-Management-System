@@ -83,7 +83,10 @@ async function updateEmployee(id, employeeData) {
       employment_status: employeeData.employment_status
     };
     
-    const result = await employee_record.findByIdAndUpdate(id, updatedEmployee, { new: true });
+    const result = await employee_record.findByIdAndUpdate(id, updatedEmployee, { 
+      new: true, 
+      runValidators: true 
+    });
     
     if (!result) {
       const notFoundError = new Error('Employee not found');
