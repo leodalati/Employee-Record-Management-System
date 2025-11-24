@@ -119,7 +119,7 @@ router.post('/:id/update', async (req, res) => {
     } catch (fetchError) {
       // If we can't fetch the employee, render generic error page
       console.error('Error fetching employee for re-render:', fetchError);
-      res.render('error', { error: err });
+      res.render('error', { error: fetchError });
     }
   }
 });

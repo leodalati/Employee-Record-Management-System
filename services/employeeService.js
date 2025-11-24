@@ -29,11 +29,20 @@ async function getEmployeeById(id) {
   try {
     const employee = await employee_record.findById(id);
     if (!employee) {
-      throw new Error('Employee not found');
+      const notFoundError = new Error('Employee not found');
+      notFoundError.statusCode = 404;
+      throw notFoundError;
     }
     return employee;
   } catch (error) {
-    throw new Error(`Error fetching employee: ${error.message}`);
+    // If it's already our custom error, rethrow it
+    if (error.statusCode === 404) {
+      throw error;
+    }
+    // Otherwise, wrap it as a database error
+    const dbError = new Error(`Database error fetching employee: ${error.message}`);
+    dbError.originalError = error;
+    throw dbError;
   }
 }
 
@@ -77,12 +86,21 @@ async function updateEmployee(id, employeeData) {
     const result = await employee_record.findByIdAndUpdate(id, updatedEmployee, { new: true });
     
     if (!result) {
-      throw new Error('Employee not found');
+      const notFoundError = new Error('Employee not found');
+      notFoundError.statusCode = 404;
+      throw notFoundError;
     }
     
     return result;
   } catch (error) {
-    throw new Error(`Error updating employee: ${error.message}`);
+    // If it's already our custom error, rethrow it
+    if (error.statusCode === 404) {
+      throw error;
+    }
+    // Otherwise, wrap it as a database error
+    const dbError = new Error(`Database error updating employee: ${error.message}`);
+    dbError.originalError = error;
+    throw dbError;
   }
 }
 
@@ -96,12 +114,21 @@ async function deleteEmployee(id) {
     const result = await employee_record.findByIdAndDelete(id);
     
     if (!result) {
-      throw new Error('Employee not found');
+      const notFoundError = new Error('Employee not found');
+      notFoundError.statusCode = 404;
+      throw notFoundError;
     }
     
     return result;
   } catch (error) {
-    throw new Error(`Error deleting employee: ${error.message}`);
+    // If it's already our custom error, rethrow it
+    if (error.statusCode === 404) {
+      throw error;
+    }
+    // Otherwise, wrap it as a database error
+    const dbError = new Error(`Database error deleting employee: ${error.message}`);
+    dbError.originalError = error;
+    throw dbError;
   }
 }
 
