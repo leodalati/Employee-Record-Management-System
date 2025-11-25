@@ -9,6 +9,7 @@ router.get('/', async (req, res, next) => {
     const EmployeeRecords = await employee_record.find();
     res.render('employee_records/list', {
       title: 'Employee Records',
+      displayName: req.user ? req.user.displayName : '',
       EmployeeRecords: EmployeeRecords
     });
   }
@@ -22,6 +23,7 @@ router.get('/', async (req, res, next) => {
 router.get('/create', (req, res) => {
   res.render('employee_records/create', {
     title: 'Add New Employee',
+    displayName: req.user ? req.user.displayName : '',
     employee: {}
   });
 });
@@ -59,6 +61,7 @@ router.get('/:id/edit', async (req, res) => {
 
     res.render('employee_records/update', {
       title: 'Edit Employee',
+      displayName: req.user ? req.user.displayName : '',
       employee: employee
     });
   }

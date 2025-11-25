@@ -8,14 +8,14 @@ let User = userModel.User;
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Home' });
+  res.render('index', { title: 'Home',displayName: req.user ? req.user.displayName : '' });
 });
 
 /* GET Create page - Show create form */
 
 router.get('/create', function (req, res, next) {
   res.render('employee_records/create', {
-    title: 'Create Employee',
+    title: 'Create Employee', displayName: req.user ? req.user.displayName : '',
     employee: {}
   });
 });
@@ -37,7 +37,7 @@ router.post('/create', async function (req, res, next) {
   catch (err) {
     console.error(err);
     res.render('employee_records/create', {
-      title: 'Create Employee - Error',
+      title: 'Create Employee - Error', displayName: req.user ? req.user.displayName : '',
       employee: req.body,
       error: 'Error creating employee: ' + err.message
     });
@@ -49,7 +49,7 @@ router.get('/update', async function (req, res, next) {
   try {
     const EmployeeRecords = await employee_record.find();
     res.render('update', {
-      title: 'Update Employee',
+      title: 'Update Employee', displayName: req.user ? req.user.displayName : '',
       EmployeeRecords: EmployeeRecords
     });
   }
