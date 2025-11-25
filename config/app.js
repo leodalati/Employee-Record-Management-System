@@ -49,6 +49,11 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Make user available to all views
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, '../views'));
