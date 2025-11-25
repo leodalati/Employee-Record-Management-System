@@ -2,9 +2,15 @@ let express = require('express');
 let router = express.Router();
 let mongoose = require('mongoose');
 let employee_record = require('../models/employee_record');
+function requireAuth(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return res.redirect('/login');
+    }
+    next();
+}
 
 //  Get route for the read employee records -- read operation
-router.get('/', async (req, res, next) => {
+router.get('/', requireAuth, async (req, res, next) => {
   try {
     const EmployeeRecords = await employee_record.find();
     res.render('employee_records/list', {
@@ -20,7 +26,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // GET - Show Create Employee Form
-router.get('/create', (req, res) => {
+router.get('/create', requireAuth, (req, res) => {
   res.render('employee_records/create', {
     title: 'Add New Employee',
     displayName: req.user ? req.user.displayName : '',
@@ -29,7 +35,7 @@ router.get('/create', (req, res) => {
 });
 
 // POST - Handle Create Employee Form Submission
-router.post('/create', async (req, res) => {
+router.post('/create', requireAuth, async (req, res) => {
   try {
     const newEmployee = new employee_record({
       name: req.body.name,
@@ -52,7 +58,7 @@ router.post('/create', async (req, res) => {
 });
 
 // GET - Show Edit Employee Form
-router.get('/:id/edit', async (req, res) => {
+router.get('/:id/edit', requireAuth, async (req, res) => {
   try {
     const employee = await employee_record.findById(req.params.id);
     if (!employee) {
@@ -72,7 +78,7 @@ router.get('/:id/edit', async (req, res) => {
 });
 
 // POST - Handle Update Employee Form Submission
-router.post('/:id/update', async (req, res) => {
+router.post('/:id/update', requireAuth, async (req, res) => {
   try {
     const updatedEmployee = {
       name: req.body.name,
@@ -97,7 +103,7 @@ router.post('/:id/update', async (req, res) => {
 });
 
 // GET - Show delete listing page (same table but allows deletion)
-router.get('/delete', async (req, res) => {
+router.get('/delete', requireAuth, async (req, res) => {
   try {
     const EmployeeRecords = await employee_record.find();
     res.render('employee_records/delete', {
@@ -111,7 +117,7 @@ router.get('/delete', async (req, res) => {
 });
 
 // POST - Perform deletion and redirect back to delete listing
-router.post('/delete/:id', async (req, res) => {
+router.post('/delete/:id', requireAuth, async (req, res) => {
   try {
     const id = req.params.id;
     await employee_record.deleteOne({ _id: id });

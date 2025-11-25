@@ -6,6 +6,14 @@ let DB = require('../config/db');
 let userModel = require('../models/user');
 let User = userModel.User;
 
+// Authentication middleware
+function requireAuth(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return res.redirect('/login');
+    }
+    next();
+}
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Home',displayName: req.user ? req.user.displayName : '' });
@@ -13,7 +21,7 @@ router.get('/', function (req, res, next) {
 
 /* GET Create page - Show create form */
 
-router.get('/create', function (req, res, next) {
+router.get('/create', requireAuth, function (req, res, next) {
   res.render('employee_records/create', {
     title: 'Create Employee', displayName: req.user ? req.user.displayName : '',
     employee: {}
@@ -21,7 +29,7 @@ router.get('/create', function (req, res, next) {
 });
 
 /* POST Create page - Handle form submission */
-router.post('/create', async function (req, res, next) {
+router.post('/create', requireAuth, async function (req, res, next) {
   try {
     const newEmployee = new employee_record({
       name: req.body.name,
@@ -45,7 +53,7 @@ router.post('/create', async function (req, res, next) {
 });
 
 /* GET Update page - Show employee selection */
-router.get('/update', async function (req, res, next) {
+router.get('/update', requireAuth, async function (req, res, next) {
   try {
     const EmployeeRecords = await employee_record.find();
     res.render('update', {
@@ -60,7 +68,7 @@ router.get('/update', async function (req, res, next) {
 });
 
 /* GET Update form for specific employee */
-router.get('/update/:id', async function (req, res, next) {
+router.get('/update/:id', requireAuth, async function (req, res, next) {
   try {
     const employee = await employee_record.findById(req.params.id);
     if (!employee) {
@@ -79,7 +87,7 @@ router.get('/update/:id', async function (req, res, next) {
 });
 
 /* POST Update form - Handle employee update */
-router.post('/update/:id', async function (req, res, next) {
+router.post('/update/:id', requireAuth, async function (req, res, next) {
   try {
     const updatedEmployee = {
       name: req.body.name,
@@ -104,7 +112,7 @@ router.post('/update/:id', async function (req, res, next) {
 });
 
 /* GET Delete page. Redirect to employee records delete listing */
-router.get('/delete', function (req, res, next) {
+router.get('/delete', requireAuth, function (req, res, next) {
   res.redirect('/employee_records/delete');
 });
 
