@@ -8,12 +8,21 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 let mongoose = require('mongoose');
 let DB = require('./db');
+let session = require('express-session');
+let passport = require('passport');
+let passportLocal = require('passport-local');
+let localStrategy = passportLocal.Strategy;
+let flash = require('connect-flash');
+let cors = require('cors');
+let userModel = require('../models/user');
+let User = userModel.User;
+var app = express();
 var indexRouter = require('../routes/index');
 var usersRouter = require('../routes/users');
 let employeeRouter = require('../routes/employee_record'); 
 
 
-var app = express();
+
 
 // Test database connection
 mongoose.connect(DB.URI);
@@ -22,6 +31,24 @@ mongoDB.on('error', console.error.bind(console, 'Connection error'));
 mongoDB.once('open', () => {
   console.log('Connected to the MongoDB');
 });
+
+// Setup express session
+app.use(session({
+  secret: "SomeSecret",
+  saveUninitialized: false,
+  resave: false
+}));  
+
+// Initialize Passport and flash messages
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+// User authentication & Serialize and deserialize user info
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 
 // view engine setup
 app.set('views', path.join(__dirname, '../views'));
